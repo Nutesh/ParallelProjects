@@ -42,7 +42,7 @@ public class MainUI {
 			boolean firstNameValidated = false;
             do {
             	System.out.println("Enter First Name : ");
-                firstName = scanner.next();
+                firstName = scanner.nextLine();
                     
                     try {
                     	
@@ -54,9 +54,9 @@ public class MainUI {
             
             boolean middleNameValidated = false;
             do {
-                    
+                    scanner= new Scanner(System.in);
                     System.out.println("Enter Middle Name : ");
-                    middleName = scanner.next();
+                    middleName = scanner.nextLine();
                     try {
                             middleNameValidated = serviceImpl.validateMiddleName(middleName);
                     } catch (BankException e) {
@@ -67,9 +67,9 @@ public class MainUI {
             
             boolean lastNameValidated = false;
             do {
-                    
+                    scanner=new Scanner(System.in);
                     System.out.println("Enter Last Name : ");
-                    lastName = scanner.next();
+                    lastName = scanner.nextLine();
                     try {
                             lastNameValidated = serviceImpl.validateName(lastName);
                     } catch (BankException e) {
@@ -79,9 +79,9 @@ public class MainUI {
            
 			boolean mobileValidated = false ;
 			do {
-				
+				scanner=new Scanner(System.in);
 				System.out.println("Enter MobileNo. : ");
-				 mobileNo = scanner.next();
+				 mobileNo = scanner.nextLine();
 				try {
 					mobileValidated = serviceImpl.validateMobile(mobileNo);
 				} catch (BankException e) {
@@ -91,7 +91,7 @@ public class MainUI {
 			
 			boolean genderValidated = false ;
 			do {
-				
+				scanner=new Scanner(System.in);
 				System.out.println("Enter Gender : ");
 				gender = scanner.next();
 				try {
@@ -117,6 +117,7 @@ public class MainUI {
 			do {
 				
 				try {
+					scanner=new Scanner(System.in);
 					System.out.println("Enter Account : ");
 					accountNo = scanner.nextLong();
 					String accountName = serviceImpl.getAccountName(accountNo);
