@@ -180,7 +180,7 @@ public class BankServiceImpl implements BankService {
 	}
 
 	public boolean validateMiddleName(String name) throws BankException {
-		String nameRegEx = "[A-Za-z-]{1,20}";
+		String nameRegEx = "[A-Za-z- ]{1,20}";
 		if (!Pattern.matches(nameRegEx, name)) {
 			throw new BankException("first letter should be capital and length must be in between 5 to 10\n"
 					+ "if you don't have middle name then press \"-\" \n");
@@ -189,7 +189,7 @@ public class BankServiceImpl implements BankService {
 	}
 
 	public boolean validateName(String name) throws BankException {
-		String nameRegEx = "[a-zA-Z]{1,20}";
+		String nameRegEx = "[a-zA-Z ]{1,20}";
 		if (!Pattern.matches(nameRegEx, name)) {
 			throw new BankException("please enter a valid name and length must be more than 20 letters \n");
 		} else

@@ -41,6 +41,7 @@ public class MainUI {
 			System.out.println("Please enter user details : \n");
 			boolean firstNameValidated = false;
             do {
+            	scanner = new Scanner(System.in);
             	System.out.println("Enter First Name : ");
                 firstName = scanner.nextLine();
                     
@@ -129,8 +130,6 @@ public class MainUI {
 					System.out.println(accountValidated);
 					System.err.println("This Account doesn't exists");
 				} catch (InputMismatchException e) {
-					scanner.next();
-					System.out.println(accountValidated);
 					System.err.println("Please enter numeric value");
 				}
 			} while (!accountValidated);
@@ -176,6 +175,7 @@ public class MainUI {
                      
                      
                      try {
+                    	 scanner= new Scanner(System.in);
                      	System.out.println("Enter Amount : ");
                          amount = scanner.nextDouble();
                              amountValidated = serviceImpl.validateAmount(amount,accountNo,"credit");
@@ -209,6 +209,7 @@ public class MainUI {
 			do {
 				
 				try {
+					scanner = new Scanner(System.in);
 					System.out.println("Enter Account : ");
 					accountNo = scanner.nextLong();
 					String accountName = serviceImpl.getAccountName(accountNo);
@@ -220,8 +221,6 @@ public class MainUI {
 					System.out.println(accountValidated);
 					System.err.println("This Account doesn't exists");
 				} catch (InputMismatchException e) {
-					scanner.next();
-					System.out.println(accountValidated);
 					System.err.println("Please enter numeric value");
 				}
 			} while (!accountValidated);
@@ -231,6 +230,7 @@ public class MainUI {
                     
                     
                     try {
+                    	scanner = new Scanner(System.in);
                     	System.out.println("Enter Amount : ");
                         amount = scanner.nextDouble();
                             amountValidated = serviceImpl.validateAmount(amount,accountNo,"debit");
@@ -239,8 +239,6 @@ public class MainUI {
                             System.err.println(e.getMessage());
                     }
                     catch (InputMismatchException e) {
-                    	scanner.next();
-                        System.out.println(amountValidated);
                         System.err.println("Please enter numeric value");
                 }
             } while(!amountValidated);
@@ -264,6 +262,7 @@ public class MainUI {
 			do {
 				
 				try {
+					scanner = new Scanner(System.in);
 					System.out.println("Enter Account : ");
 					accountNo = scanner.nextLong();
 					String accountName = serviceImpl.getAccountName(accountNo);
@@ -275,8 +274,6 @@ public class MainUI {
 					System.out.println(accountValidated);
 					System.err.println("This Account doesn't exists");
 				} catch (InputMismatchException e) {
-					scanner.next();
-					System.out.println(accountValidated);
 					System.err.println("Please enter numeric value");
 				}
 			} while (!accountValidated);
@@ -295,8 +292,6 @@ public class MainUI {
 					
 					System.err.println("This Account doesn't exists");
 				} catch (InputMismatchException e) {
-					scanner.next();
-					
 					System.err.println("Please enter numeric value");
 				}
 			} while (!recieverAccountValidated);
@@ -306,6 +301,7 @@ public class MainUI {
                     
                     
                     try {
+                    	scanner = new Scanner(System.in);
                     	System.out.println("Enter Amount : ");
                         amount = scanner.nextDouble();
                             amountValidated = serviceImpl.validateAmount(amount,accountNo,"debit");
@@ -314,9 +310,7 @@ public class MainUI {
                             System.err.println(e.getMessage());
                     }
                     catch (InputMismatchException e) {
-                    	scanner.next();
-                        System.out.println(amountValidated);
-                        System.err.println("Please enter numeric value");
+                    System.err.println("Please enter numeric value");
                 }
             } while(!amountValidated);
 			String transactionNo = serviceImpl.getTransactionNo();
@@ -338,6 +332,7 @@ public class MainUI {
 			do {
 				
 				try {
+					scanner = new Scanner(System.in);
 					System.out.println("Enter Account : ");
 					accountNo = scanner.nextLong();
 					String accountName = serviceImpl.getAccountName(accountNo);
@@ -349,8 +344,6 @@ public class MainUI {
 					System.out.println(accountValidated);
 					System.err.println("This Account doesn't exists");
 				} catch (InputMismatchException e) {
-					scanner.next();
-					System.out.println(accountValidated);
 					System.err.println("Please enter numeric value");
 				}
 			} while (!accountValidated);
@@ -370,6 +363,7 @@ public class MainUI {
 			do {
 				
 				try {
+					scanner = new Scanner(System.in);
 					System.out.println("Enter Account : ");
 					accountNo = scanner.nextLong();
 					String accountName = serviceImpl.getAccountName(accountNo);
@@ -381,8 +375,6 @@ public class MainUI {
 					System.out.println(accountValidated);
 					System.err.println("This Account doesn't exists");
 				} catch (InputMismatchException e) {
-					scanner.next();
-					System.out.println(accountValidated);
 					System.err.println("Please enter numeric value");
 				}
 			} while (!accountValidated);
