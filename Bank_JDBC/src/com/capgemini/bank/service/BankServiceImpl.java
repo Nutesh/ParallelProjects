@@ -53,6 +53,14 @@ public class BankServiceImpl implements BankService {
 		} else
 			return true;
 	}
+	
+	public boolean validatePin(Integer pin) throws BankException {
+		String nameRegEx = "[0-9]{4}";
+		if (!Pattern.matches(nameRegEx, pin.toString())) {
+			throw new BankException("please enter a valid pin length must be exact 4 digits only");
+		} else
+			return true;
+	}
 
 	public boolean validateGender(String name) throws BankException {
 
@@ -71,9 +79,6 @@ public class BankServiceImpl implements BankService {
 			
 				throw new BankException("Amount must be greater than 0 and not more than 2000");
 			}
-			/*if (BankDAO.accounts.get(accountNo).getBalance() < amount) {
-				throw new BankException("Your balance is less than entered amount");
-			}*/
 			amountValidated = true;
 		 }
 		 else if(type == "credit")
@@ -103,38 +108,45 @@ public class BankServiceImpl implements BankService {
 	}
 
 	@Override
-	public boolean deposit(Transaction transaction) throws BankException {
-		double sourceAccountBalance = dao.showBalance(transaction.getDestinationAccountNo());
-		sourceAccountBalance =+ transaction.getAmount();
-		int deposited = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
+	public String deposit(Transaction transaction) throws BankException {
+		String transactionNo=dao.insertTransaction(transaction);
+		double destAccountBalance = dao.showBalance(transaction.getDestinationAccountNo());
+		destAccountBalance =+ transaction.getAmount();
+		int deposited = dao.updateBalance(transaction.getDestinationAccountNo(), destAccountBalance);
 		if(deposited <0) {
-			return false;
+			throw new BankException("There was some error in transaction ..\nPlease try again!!");
 		}
 		else
-			return true;
+			return transactionNo;
 		
 	}
 
 	@Override
-	public boolean fundTransfer(Transaction transaction) throws BankException {
-		BankServiceImpl serviceImpl = new BankServiceImpl();
-		if(serviceImpl.withdraw(transaction) && serviceImpl.deposit(transaction)) {
-			return true;
+	public String fundTransfer(Transaction transaction) throws BankException {
+		String transactionNo=dao.insertTransaction(transaction);
+		double destAccountBalance = dao.showBalance(transaction.getDestinationAccountNo());
+		destAccountBalance =+ transaction.getAmount();
+		int amountAdded = dao.updateBalance(transaction.getDestinationAccountNo(), destAccountBalance);
+		double sourceAccountBalance =- transaction.getAmount();
+		int amountDeducted = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
+		if(amountAdded <0 || amountDeducted<0) {
+			throw new BankException("There was some error in transaction ..\nPlease try again!!");
 		}
-		else 
-			return false;
+		else
+			return transactionNo;
 	}
 
 	@Override
-	public boolean withdraw(Transaction transaction) throws BankException {
+	public String withdraw(Transaction transaction) throws BankException {
+		String transactionNo=dao.insertTransaction(transaction);
 		double sourceAccountBalance = dao.showBalance(transaction.getAccountNo());
 		sourceAccountBalance =- transaction.getAmount();
-		int deposited = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
-		if(deposited <0) {
-			return false;
+		int withdrawn = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
+		if(withdrawn <0) {
+			throw new BankException("There was some error in transaction ..\nPlease try again!!");
 		}
 		else
-			return true;
+			return transactionNo;
 	}
 
 	@Override

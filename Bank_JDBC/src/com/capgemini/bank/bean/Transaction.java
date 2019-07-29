@@ -56,14 +56,12 @@ public class Transaction {
 		this.destinationAccountNo = destinationAccountNo;
 	}
 
-	public Transaction(String transactionNo, long accountNo, String type, double amount, String time,
+	public Transaction( long accountNo, String type, double amount,
 			long destinationAccountNo) {
 		super();
-		this.transactionNo = transactionNo;
 		this.accountNo = accountNo;
 		this.type = type;
 		this.amount = amount;
-		this.time = time;
 		this.destinationAccountNo = destinationAccountNo;
 	}
 

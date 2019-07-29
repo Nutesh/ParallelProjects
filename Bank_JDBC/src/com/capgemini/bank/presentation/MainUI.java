@@ -1,7 +1,5 @@
 package com.capgemini.bank.presentation;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.List;
@@ -20,8 +18,7 @@ public class MainUI {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		BankServiceImpl serviceImpl = new BankServiceImpl();
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/YYYY HH:mm:ss");
-		
+		String transactionNo = "";
 		
 		
 		
@@ -36,6 +33,7 @@ public class MainUI {
 			
 			String firstName,middleName,lastName,gender;
 			String mobileNo = "";
+			int pin;
 			
 			System.out.println("Please enter user details : \n");
 			boolean firstNameValidated = false;
@@ -100,7 +98,20 @@ public class MainUI {
 					System.err.println(e.getMessage());
 				}
 			} while (!genderValidated);
-			Account account = new Account(firstName, middleName, lastName, mobileNo, gender);
+			
+			boolean pinValidated = false;
+            do {
+                    scanner= new Scanner(System.in);
+                    System.out.println("Enter Pin : ");
+                    pin = scanner.nextInt();
+                    try {
+                            pinValidated = serviceImpl.validatePin(pin);
+                    } catch (BankException e) {
+                            System.out.println(pinValidated);
+                            System.err.println(e.getMessage());
+                    }
+            } while(!pinValidated);
+			Account account = new Account(firstName, middleName, lastName, mobileNo, gender,pin);
 			try {
 				
 				long accountNo = serviceImpl.createAccount(account);
@@ -188,16 +199,20 @@ public class MainUI {
                          System.err.println("Please enter numeric value");
                  }
              } while(!amountValidated);
-			//String transactionNo = serviceImpl.getTransactionNo();
 			String type = "credit";
 			
-			//Transaction transaction = new Transaction(transactionNo, accountNo, type, amount, time, destinationAccountNo);
-			//boolean amountDeposited = serviceImpl.deposit(transaction);
-			/*if(amountDeposited) {
+			Transaction transaction = new Transaction( accountNo, type, amount, accountNo);
+			try {
+				transactionNo = serviceImpl.deposit(transaction);
 				System.out.println("Your account is credited with Rs : "+amount+
 						"\n And your transaction id is : "+transactionNo);
-			}*/
-		}
+			} catch (BankException e) {
+				System.err.println(e.getMessage());
+			}
+			
+				
+			}
+		
 			break;
 			
 		case 4:{
@@ -239,19 +254,23 @@ public class MainUI {
                         System.err.println("Please enter numeric value");
                 }
             } while(!amountValidated);
-			//String transactionNo = serviceImpl.getTransactionNo();
 			String type = "debit";
 			
-			//Transaction transaction = new Transaction(transactionNo, accountNo, type, amount, time, destinationAccountNo);
-			/*boolean amountWithdrawed = serviceImpl.withdraw(transaction);
-			if(amountWithdrawed) {
+			Transaction transaction = new Transaction( accountNo, type, amount, accountNo);
+			
+			try {
+				transactionNo = serviceImpl.withdraw(transaction);
 				System.out.println("Your account is debited with Rs : "+amount+
 						"\n And your transaction id is : "+transactionNo);
-			}*/
-		}
+			} catch (BankException e) {
+				System.err.println(e.getMessage());
+			}
+				
+			}
+		
 			break;
 			
-		case 5:{
+			case 5:{
 			long accountNo = 0,destinationAccountNo =0;
 			boolean accountValidated = false;
 			do {
@@ -308,20 +327,23 @@ public class MainUI {
                     System.err.println("Please enter numeric value");
                 }
             } while(!amountValidated);
-			//String transactionNo = serviceImpl.getTransactionNo();
 			String type = "debit";
-			LocalDateTime now = LocalDateTime.now();
-			String time = dateTimeFormatter.format(now);
 			
-			/*Transaction transaction = new Transaction(transactionNo, accountNo, type, amount, time, destinationAccountNo);
-			boolean amountTransferred = serviceImpl.fundTransfer(transaction);
-			if(amountTransferred) {
+			
+			Transaction transaction = new Transaction( accountNo, type, amount, destinationAccountNo);
+			try {
+				transactionNo = serviceImpl.fundTransfer(transaction);
 				System.out.println("Your have transferred Rs : "+amount+ " to "+ serviceImpl.getAccountName(destinationAccountNo)+
 						"\n And your transaction id is : "+transactionNo);
-			}*/
+			} catch (BankException e) {
+				System.err.println(e.getMessage());
+			}
+				
+			
 		}
 			break;
-		case 6:{
+		case 6:
+		{
 			long accountNo = 0;
 			boolean accountValidated = false;
 			do {
@@ -336,7 +358,6 @@ public class MainUI {
 						accountValidated = true;
 					}
 				} catch (NullPointerException e) {
-					System.out.println(accountValidated);
 					System.err.println("This Account doesn't exists");
 				} catch (InputMismatchException e) {
 					System.err.println("Please enter numeric value");
@@ -346,8 +367,7 @@ public class MainUI {
 			try {
 				transactions = serviceImpl.showAllTransactions(accountNo);
 			} catch (InputMismatchException | BankException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println(e.getMessage());
 			}
 			int count=0;
 			for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext() && count <10;) {
@@ -380,11 +400,16 @@ public class MainUI {
 				}
 			} while (!accountValidated);
 			List<Transaction> transactions = null;
-			//transactions = serviceImpl.showAllTransactions(accountNo);
-			for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
-				Transaction transaction = (Transaction) iterator.next();
-				System.out.println(transaction);
+			try {
+				transactions = serviceImpl.showAllTransactions(accountNo);
+				for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
+					Transaction transaction = (Transaction) iterator.next();
+					System.out.println(transaction);
+				}
+			} catch (InputMismatchException | BankException e) {
+				System.err.println(e.getMessage());
 			}
+			
 		}
 			break;
 			

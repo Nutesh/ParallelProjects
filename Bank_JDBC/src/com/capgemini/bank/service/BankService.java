@@ -17,11 +17,11 @@ public interface BankService {
 
 
 
-	public boolean deposit(Transaction transaction) throws BankException;
+	public String deposit(Transaction transaction) throws BankException;
 
-	public boolean fundTransfer(Transaction transaction) throws BankException;
+	public String fundTransfer(Transaction transaction) throws BankException;
 
-	public boolean withdraw(Transaction transaction) throws BankException;
+	public String withdraw(Transaction transaction) throws BankException;
 
 	double showBalance(long accountNo) throws BankException, InputMismatchException;
 }

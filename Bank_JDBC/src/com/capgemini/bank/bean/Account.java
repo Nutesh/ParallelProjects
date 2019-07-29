@@ -81,9 +81,9 @@ public class Account {
 				+ "]";
 	}
 
-	public Account(String firstName2, String middleName2, String lastName2, String mobileNo2, String gender2) {
+	public Account(String firstName2, String middleName2, String lastName2, String mobileNo2, String gender2,int pin) {
 		super();
-		
+		this.pin=pin;
 		this.firstName = firstName2;
 		this.middleName = middleName2;
 		this.lastName = lastName2;
