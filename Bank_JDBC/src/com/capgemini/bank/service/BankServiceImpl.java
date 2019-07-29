@@ -1,11 +1,8 @@
-package com.capgemini.bank.exception;
+package com.capgemini.bank.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.InputMismatchException;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import com.capgemini.bank.bean.Account;
@@ -13,13 +10,12 @@ import com.capgemini.bank.bean.Transaction;
 import com.capgemini.bank.dao.BankDao;
 import com.capgemini.bank.dao.BankDaoImpl;
 import com.capgemini.bank.exception.BankException;
-import com.capgemini.bank.service.BankService;
 
 public class BankServiceImpl implements BankService {
 
 	
 	double newBalance = 0, oldBalance = 0;
-	BankDao bank = new BankDaoImpl();
+	BankDao dao = new BankDaoImpl();
 
 	
 
@@ -29,6 +25,7 @@ public class BankServiceImpl implements BankService {
 
 	public String getAccountName(long accountNo) throws NullPointerException, InputMismatchException {
 		String name = "";
+		name=dao.getAccountName(accountNo);
 		return name;
 	}
 
@@ -90,46 +87,60 @@ public class BankServiceImpl implements BankService {
 		return amountValidated;
 	}
 
-	@Override
-	public List<Transaction> showRecentTransactions(long accountNo) throws InputMismatchException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	public List<Transaction> showAllTransactions(long accountNo) throws BankException, InputMismatchException {
-		// TODO Auto-generated method stub
-		return null;
+		List<Transaction> transactions = new LinkedList<Transaction>();
+		transactions=dao.showAllTransactions(accountNo);
+		return transactions;
 	}
 
 	@Override
 	public long createAccount(Account account) throws BankException {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return dao.insertAccount(account);
 	}
 
 	@Override
 	public boolean deposit(Transaction transaction) throws BankException {
-		// TODO Auto-generated method stub
-		return false;
+		double sourceAccountBalance = dao.showBalance(transaction.getDestinationAccountNo());
+		sourceAccountBalance =+ transaction.getAmount();
+		int deposited = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
+		if(deposited <0) {
+			return false;
+		}
+		else
+			return true;
+		
 	}
 
 	@Override
 	public boolean fundTransfer(Transaction transaction) throws BankException {
-		// TODO Auto-generated method stub
-		return false;
+		BankServiceImpl serviceImpl = new BankServiceImpl();
+		if(serviceImpl.withdraw(transaction) && serviceImpl.deposit(transaction)) {
+			return true;
+		}
+		else 
+			return false;
 	}
 
 	@Override
 	public boolean withdraw(Transaction transaction) throws BankException {
-		// TODO Auto-generated method stub
-		return false;
+		double sourceAccountBalance = dao.showBalance(transaction.getAccountNo());
+		sourceAccountBalance =- transaction.getAmount();
+		int deposited = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
+		if(deposited <0) {
+			return false;
+		}
+		else
+			return true;
 	}
 
 	@Override
 	public double showBalance(long accountNo) throws BankException, InputMismatchException {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return dao.showBalance(accountNo);
 	}
 
 	

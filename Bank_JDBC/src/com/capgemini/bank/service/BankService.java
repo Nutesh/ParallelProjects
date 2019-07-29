@@ -9,7 +9,7 @@ import com.capgemini.bank.exception.BankException;
 
 public interface BankService {
 	
-	public List<Transaction> showRecentTransactions(long accountNo) throws  InputMismatchException;
+	
 
 	public List<Transaction> showAllTransactions(long accountNo) throws BankException, InputMismatchException;
 

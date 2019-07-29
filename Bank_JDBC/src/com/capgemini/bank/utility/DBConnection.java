@@ -19,7 +19,7 @@ public static Connection getConnection() {
 		
 		
 		String url = "jdbc:oracle:thin:@localhost:1521:XE";
-		connection = DriverManager.getConnection(url, "scott", "tiger");
+		connection = DriverManager.getConnection(url, "cg", "cg");
 	}catch (ClassNotFoundException e) {
 		
 		e.printStackTrace();
@@ -30,7 +30,7 @@ public static Connection getConnection() {
 	return connection;
 	
 }
-/*public static void main(String[] args) {
+public static void main(String[] args) {
 	System.out.println(DBConnection.getConnection());
-}*/
+}
 }

@@ -1,18 +1,24 @@
 package com.capgemini.bank.dao;
 
-import java.util.List;
-
+import java.util.LinkedList;
 import com.capgemini.bank.bean.Account;
 import com.capgemini.bank.bean.Transaction;
 
 public interface BankDao {
 
-	int insertAccount(Account account);
+	long insertAccount(Account account);
 	
-	int insertTransaction(Transaction transaction);
+	String validateAccount(long accountNo,int pin);
 	
-	int updateAccount(Account account);
+	String insertTransaction(Transaction transaction);
 	
-	List<Transaction> showAllTransactions(Transaction transaction);
+	int updateBalance(long accountNo,double balance);
+	
+	LinkedList<Transaction> showAllTransactions(Long accountNo);
+	
+	double showBalance(Long accountNo);
+	
+	String getAccountName(long accountNo);
+	
 	
 }

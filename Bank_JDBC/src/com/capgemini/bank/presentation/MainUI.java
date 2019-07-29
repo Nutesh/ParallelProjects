@@ -10,7 +10,7 @@ import java.util.Scanner;
 import com.capgemini.bank.bean.Account;
 import com.capgemini.bank.bean.Transaction;
 import com.capgemini.bank.exception.BankException;
-import com.capgemini.bank.exception.BankServiceImpl;
+import com.capgemini.bank.service.BankServiceImpl;
 
 public class MainUI {
 	/**
@@ -190,9 +190,7 @@ public class MainUI {
              } while(!amountValidated);
 			//String transactionNo = serviceImpl.getTransactionNo();
 			String type = "credit";
-			LocalDateTime now = LocalDateTime.now();
-			String time = dateTimeFormatter.format(now);
-			long destinationAccountNo = accountNo;
+			
 			//Transaction transaction = new Transaction(transactionNo, accountNo, type, amount, time, destinationAccountNo);
 			//boolean amountDeposited = serviceImpl.deposit(transaction);
 			/*if(amountDeposited) {
@@ -344,7 +342,13 @@ public class MainUI {
 					System.err.println("Please enter numeric value");
 				}
 			} while (!accountValidated);
-			List<Transaction> transactions = serviceImpl.showRecentTransactions(accountNo);
+			List<Transaction> transactions = null;
+			try {
+				transactions = serviceImpl.showAllTransactions(accountNo);
+			} catch (InputMismatchException | BankException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			int count=0;
 			for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext() && count <10;) {
 				Transaction transaction = (Transaction) iterator.next();
