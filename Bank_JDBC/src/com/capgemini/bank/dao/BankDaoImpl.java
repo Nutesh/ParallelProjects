@@ -17,7 +17,7 @@ public class BankDaoImpl implements BankDao {
 	boolean status = false;
 	int row = -1;
 	long accountNo = 0;
-	String transactionNo = "txn";
+	
 
 	@Override
 	public long insertAccount(Account account) {
@@ -46,18 +46,20 @@ public class BankDaoImpl implements BankDao {
 
 	@Override
 	public String insertTransaction(Transaction transaction) {
+		String transactionNo=null;
 		try (Connection connection = DBConnection.getConnection();) {
 
 			statement = connection.prepareStatement("select transactionSeq.NEXTVAL from dual");
 			resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				transactionNo = transactionNo + resultSet.getInt(1);
+				transactionNo = "txn" + resultSet.getInt(1);
 				statement = connection.prepareStatement(
-						"insert into book(transactionId,srcAccount,type,amount,destAccount) values(?,?,?,?)");
+						"insert into transactions(transactionId,srcAccount,type,amount,destAccount) values(?,?,?,?,?)");
 				statement.setString(1, transactionNo);
 				statement.setLong(2, transaction.getAccountNo());
 				statement.setString(3, transaction.getType());
-				statement.setLong(4, transaction.getDestinationAccountNo());
+				statement.setDouble(4, transaction.getAmount());
+				statement.setLong(5, transaction.getDestinationAccountNo());
 				row = statement.executeUpdate();
 			}
 		} catch (SQLException e) {
@@ -74,6 +76,8 @@ public class BankDaoImpl implements BankDao {
 
 			statement = connection
 					.prepareStatement("select * from transactions where srcaccount = ? or destaccount = ? order by timestamp desc");
+			statement.setLong(1, accountNo);
+			statement.setLong(2, accountNo);
 			resultSet=statement.executeQuery();
 			while(resultSet.next()) {
 				transactions.add(new Transaction(resultSet.getString(1), resultSet.getLong(2), resultSet.getString(3), resultSet.getDouble(4), resultSet.getString(5), resultSet.getLong(6)));

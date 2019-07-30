@@ -70,6 +70,18 @@ public class Transaction {
 		// TODO Auto-generated constructor stub
 	}
 
+
+	public Transaction(String transactionNo, long accountNo, String type, double amount, String time,
+			long destinationAccountNo) {
+		super();
+		this.transactionNo = transactionNo;
+		this.accountNo = accountNo;
+		this.type = type;
+		this.amount = amount;
+		this.time = time;
+		this.destinationAccountNo = destinationAccountNo;
+	}
+
 	@Override
 	public String toString() {
 		return "Transaction [transactionNo=" + transactionNo + ", accountNo=" + accountNo + ", type=" + type

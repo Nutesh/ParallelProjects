@@ -33,7 +33,7 @@ public class MainUI {
 			
 			String firstName,middleName,lastName,gender;
 			String mobileNo = "";
-			int pin;
+			int pin = 0;
 			
 			System.out.println("Please enter user details : \n");
 			boolean firstNameValidated = false;
@@ -91,7 +91,7 @@ public class MainUI {
 			do {
 				scanner=new Scanner(System.in);
 				System.out.println("Enter Gender : ");
-				gender = scanner.next();
+				gender = scanner.nextLine();
 				try {
 					genderValidated = serviceImpl.validateGender(gender);
 					} catch (BankException e) {
@@ -100,17 +100,44 @@ public class MainUI {
 			} while (!genderValidated);
 			
 			boolean pinValidated = false;
+			int reenteredPin=0;
             do {
                     scanner= new Scanner(System.in);
-                    System.out.println("Enter Pin : ");
-                    pin = scanner.nextInt();
+                    
                     try {
-                            pinValidated = serviceImpl.validatePin(pin);
+                    	System.out.println("Enter Pin : ");
+                        pin = scanner.nextInt();
+                          pinValidated=  serviceImpl.validatePin(pin);
+                          boolean repinValidated = false;
+                          do {
+                              scanner= new Scanner(System.in);
+                              
+                              try {
+                              	System.out.println("Reenter Pin : ");
+                                  reenteredPin = scanner.nextInt();
+                                    repinValidated=  serviceImpl.validatePin(pin);
+                                  
+                              } catch (BankException e) {
+                                      
+                                      System.err.println(e.getMessage());
+                              }
+                              catch (InputMismatchException e) {
+                              	System.out.println(repinValidated);
+          						System.err.println("Please enter numeric value !!");
+          					}
+                              
+                      } while(!repinValidated);
                     } catch (BankException e) {
-                            System.out.println(pinValidated);
+                            
                             System.err.println(e.getMessage());
                     }
+                    catch (InputMismatchException e) {
+                    	System.out.println(pinValidated);
+						System.err.println("Please enter numeric value !!");
+					}
+                    
             } while(!pinValidated);
+            
 			Account account = new Account(firstName, middleName, lastName, mobileNo, gender,pin);
 			try {
 				
@@ -121,304 +148,314 @@ public class MainUI {
 			}
 		}
 			break;
-
-		case 2: {
-			long accountNo = 0;
-			boolean accountValidated = false;
-			do {
-				
-				try {
-					scanner=new Scanner(System.in);
-					System.out.println("Enter Account : ");
-					accountNo = scanner.nextLong();
-					String accountName = serviceImpl.getAccountName(accountNo);
-					System.out.println("Account Name : "+accountName);
-					if (!accountName.equals("")) {
-						accountValidated = true;
-					}
-				} catch (NullPointerException e) {
-					System.out.println(accountValidated);
-					System.err.println("This Account doesn't exists");
-				} catch (InputMismatchException e) {
-					System.err.println("Please enter numeric value");
-				}
-			} while (!accountValidated);
-			try {
-				
-				double balance = serviceImpl.showBalance(accountNo);
-				System.out.println("Your Balance is : " + balance);
-			}
-			catch (InputMismatchException e) {
-				System.err.println("Please enter a valid account number");
-			}
-			catch (BankException e) {
-				System.err.println(e.getMessage());
-			}
-		}
-			break;
-			
-		case 3:{
-			long accountNo = 0;
-			boolean accountValidated = false;
-			do {
-				
-				try {
-					System.out.println("Enter Account No. : ");
-					accountNo = scanner.nextLong();
-					String accountName = serviceImpl.getAccountName(accountNo);
-					System.out.println("Account Name : "+accountName);
-					if (!accountName.equals("")) {
-						accountValidated = true;
-					}
-				} catch (NullPointerException e) {
-					System.out.println(accountValidated);
-					System.err.println("This Account doesn't exists");
-				} catch (InputMismatchException e) {
-					scanner.next();
-					System.out.println(accountValidated);
-					System.err.println("Please enter numeric value");
-				}
-			} while (!accountValidated);
-			double amount = 0;
-			 boolean amountValidated = false;
-             do {
-                     
-                     
-                     try {
-                    	 scanner= new Scanner(System.in);
-                     	System.out.println("Enter Amount : ");
-                         amount = scanner.nextDouble();
-                             amountValidated = serviceImpl.validateAmount(amount,accountNo,"credit");
-                       } catch (BankException e) {
-                             System.out.println(amountValidated);
-                             System.err.println(e.getMessage());
-                     }
-                     catch (InputMismatchException e) {
-                     	scanner.next();
-                         System.out.println(amountValidated);
-                         System.err.println("Please enter numeric value");
-                 }
-             } while(!amountValidated);
-			String type = "credit";
-			
-			Transaction transaction = new Transaction( accountNo, type, amount, accountNo);
-			try {
-				transactionNo = serviceImpl.deposit(transaction);
-				System.out.println("Your account is credited with Rs : "+amount+
-						"\n And your transaction id is : "+transactionNo);
-			} catch (BankException e) {
-				System.err.println(e.getMessage());
-			}
-			
-				
-			}
-		
-			break;
-			
-		case 4:{
-			long accountNo = 0;
-			boolean accountValidated = false;
-			do {
-				
-				try {
-					scanner = new Scanner(System.in);
-					System.out.println("Enter Account : ");
-					accountNo = scanner.nextLong();
-					String accountName = serviceImpl.getAccountName(accountNo);
-					System.out.println("Account Name : "+accountName);
-					if (!accountName.equals("")) {
-						accountValidated = true;
-					}
-				} catch (NullPointerException e) {
-					System.out.println(accountValidated);
-					System.err.println("This Account doesn't exists");
-				} catch (InputMismatchException e) {
-					System.err.println("Please enter numeric value");
-				}
-			} while (!accountValidated);
-			double amount = 0;
-			 boolean amountValidated = false;
-            do {
-                    
-                    
-                    try {
-                    	scanner = new Scanner(System.in);
-                    	System.out.println("Enter Amount : ");
-                        amount = scanner.nextDouble();
-                            amountValidated = serviceImpl.validateAmount(amount,accountNo,"debit");
-                    } catch (BankException e) {
-                            System.out.println(amountValidated);
-                            System.err.println(e.getMessage());
-                    }
-                    catch (InputMismatchException e) {
-                        System.err.println("Please enter numeric value");
-                }
-            } while(!amountValidated);
-			String type = "debit";
-			
-			Transaction transaction = new Transaction( accountNo, type, amount, accountNo);
-			
-			try {
-				transactionNo = serviceImpl.withdraw(transaction);
-				System.out.println("Your account is debited with Rs : "+amount+
-						"\n And your transaction id is : "+transactionNo);
-			} catch (BankException e) {
-				System.err.println(e.getMessage());
-			}
-				
-			}
-		
-			break;
-			
-			case 5:{
-			long accountNo = 0,destinationAccountNo =0;
-			boolean accountValidated = false;
-			do {
-				
-				try {
-					scanner = new Scanner(System.in);
-					System.out.println("Enter Account : ");
-					accountNo = scanner.nextLong();
-					String accountName = serviceImpl.getAccountName(accountNo);
-					System.out.println("Account Name : "+accountName);
-					if (!accountName.equals("")) {
-						accountValidated = true;
-					}
-				} catch (NullPointerException e) {
-					System.out.println(accountValidated);
-					System.err.println("This Account doesn't exists");
-				} catch (InputMismatchException e) {
-					System.err.println("Please enter numeric value");
-				}
-			} while (!accountValidated);
-			boolean recieverAccountValidated = false;
-			do {
-				
-				try {
-					System.out.println("Enter reciever account no. :");
-					destinationAccountNo = scanner.nextLong();
-					String accountName = serviceImpl.getAccountName(destinationAccountNo);
-					System.out.println("Account Name : "+accountName);
-					if (!accountName.equals("")) {
-						recieverAccountValidated = true;
-					}
-				} catch (NullPointerException e) {
-					
-					System.err.println("This Account doesn't exists");
-				} catch (InputMismatchException e) {
-					System.err.println("Please enter numeric value");
-				}
-			} while (!recieverAccountValidated);
-			double amount = 0;
-			 boolean amountValidated = false;
-            do {
-                    
-                    
-                    try {
-                    	scanner = new Scanner(System.in);
-                    	System.out.println("Enter Amount : ");
-                        amount = scanner.nextDouble();
-                            amountValidated = serviceImpl.validateAmount(amount,accountNo,"debit");
-                    } catch (BankException e) {
-                            System.out.println(amountValidated);
-                            System.err.println(e.getMessage());
-                    }
-                    catch (InputMismatchException e) {
-                    System.err.println("Please enter numeric value");
-                }
-            } while(!amountValidated);
-			String type = "debit";
-			
-			
-			Transaction transaction = new Transaction( accountNo, type, amount, destinationAccountNo);
-			try {
-				transactionNo = serviceImpl.fundTransfer(transaction);
-				System.out.println("Your have transferred Rs : "+amount+ " to "+ serviceImpl.getAccountName(destinationAccountNo)+
-						"\n And your transaction id is : "+transactionNo);
-			} catch (BankException e) {
-				System.err.println(e.getMessage());
-			}
-				
-			
-		}
-			break;
-		case 6:
-		{
-			long accountNo = 0;
-			boolean accountValidated = false;
-			do {
-				
-				try {
-					scanner = new Scanner(System.in);
-					System.out.println("Enter Account : ");
-					accountNo = scanner.nextLong();
-					String accountName = serviceImpl.getAccountName(accountNo);
-					System.out.println("Account Name : "+accountName);
-					if (!accountName.equals("")) {
-						accountValidated = true;
-					}
-				} catch (NullPointerException e) {
-					System.err.println("This Account doesn't exists");
-				} catch (InputMismatchException e) {
-					System.err.println("Please enter numeric value");
-				}
-			} while (!accountValidated);
-			List<Transaction> transactions = null;
-			try {
-				transactions = serviceImpl.showAllTransactions(accountNo);
-			} catch (InputMismatchException | BankException e) {
-				System.err.println(e.getMessage());
-			}
-			int count=0;
-			for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext() && count <10;) {
-				Transaction transaction = (Transaction) iterator.next();
-				System.out.println(transaction);
-				count++;
-			}
-		}
-			break;
-			
-		case 7:{
-			long accountNo = 0;
-			boolean accountValidated = false;
-			do {
-				
-				try {
-					scanner = new Scanner(System.in);
-					System.out.println("Enter Account : ");
-					accountNo = scanner.nextLong();
-					String accountName = serviceImpl.getAccountName(accountNo);
-					System.out.println("Account Name : "+accountName);
-					if (!accountName.equals("")) {
-						accountValidated = true;
-						}
-				} catch (NullPointerException e) {
-					System.out.println(accountValidated);
-					System.err.println("This Account doesn't exists");
-				} catch (InputMismatchException e) {
-					System.err.println("Please enter numeric value");
-				}
-			} while (!accountValidated);
-			List<Transaction> transactions = null;
-			try {
-				transactions = serviceImpl.showAllTransactions(accountNo);
-				for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
-					Transaction transaction = (Transaction) iterator.next();
-					System.out.println(transaction);
-				}
-			} catch (InputMismatchException | BankException e) {
-				System.err.println(e.getMessage());
-			}
-			
-		}
-			break;
-			
-		
 			
 		case 8:{
 			scanner.close();
 			System.exit(0);
 		}
+		break;
+			
+		case 2:{
+				do {
+				case 1: {
+					long accountNo = 0;
+					boolean accountValidated = false;
+					do {
+						
+						try {
+							scanner=new Scanner(System.in);
+							System.out.println("Enter Account : ");
+							accountNo = scanner.nextLong();
+							String accountName = serviceImpl.getAccountName(accountNo);
+							System.out.println("Account Name : "+accountName);
+							if (!accountName.equals("")) {
+								accountValidated = true;
+							}
+						} catch (NullPointerException e) {
+							System.out.println(accountValidated);
+							System.err.println("This Account doesn't exists");
+						} catch (InputMismatchException e) {
+							System.err.println("Please enter numeric value");
+						}
+					} while (!accountValidated);
+					try {
+						
+						double balance = serviceImpl.showBalance(accountNo);
+						System.out.println("Your Balance is : " + balance);
+					}
+					catch (InputMismatchException e) {
+						System.err.println("Please enter a valid account number");
+					}
+					catch (BankException e) {
+						System.err.println(e.getMessage());
+					}
+				}
+					break;
+					
+				case 3:{
+					long accountNo = 0;
+					boolean accountValidated = false;
+					do {
+						
+						try {
+							System.out.println("Enter Account No. : ");
+							accountNo = scanner.nextLong();
+							String accountName = serviceImpl.getAccountName(accountNo);
+							System.out.println("Account Name : "+accountName);
+							if (!accountName.equals("")) {
+								accountValidated = true;
+							}
+						} catch (NullPointerException e) {
+							System.out.println(accountValidated);
+							System.err.println("This Account doesn't exists");
+						} catch (InputMismatchException e) {
+							scanner.next();
+							System.out.println(accountValidated);
+							System.err.println("Please enter numeric value");
+						}
+					} while (!accountValidated);
+					double amount = 0;
+					 boolean amountValidated = false;
+		             do {
+		                     
+		                     
+		                     try {
+		                    	 scanner= new Scanner(System.in);
+		                     	System.out.println("Enter Amount : ");
+		                         amount = scanner.nextDouble();
+		                             amountValidated = serviceImpl.validateAmount(amount,accountNo,"credit");
+		                       } catch (BankException e) {
+		                           
+		                             System.err.println(e.getMessage());
+		                     }
+		                     catch (InputMismatchException e) {
+		                     	scanner.next();
+		                         
+		                         System.err.println("Please enter numeric value");
+		                 }
+		             } while(!amountValidated);
+					String type = "credit";
+					
+					Transaction transaction = new Transaction( accountNo, type, amount, accountNo);
+					try {
+						transactionNo = serviceImpl.deposit(transaction);
+						System.out.println("Your account is credited with Rs : "+amount+
+								"\n And your transaction id is : "+transactionNo);
+					} catch (BankException e) {
+						System.err.println(e.getMessage());
+					}
+					
+						
+					}
+				
+					break;
+					
+				case 4:{
+					long accountNo = 0;
+					boolean accountValidated = false;
+					do {
+						
+						try {
+							scanner = new Scanner(System.in);
+							System.out.println("Enter Account : ");
+							accountNo = scanner.nextLong();
+							String accountName = serviceImpl.getAccountName(accountNo);
+							System.out.println("Account Name : "+accountName);
+							if (!accountName.equals("")) {
+								accountValidated = true;
+							}
+						} catch (NullPointerException e) {
+							
+							System.err.println("This Account doesn't exists");
+						} catch (InputMismatchException e) {
+							System.err.println("Please enter numeric value");
+						}
+					} while (!accountValidated);
+					double amount = 0;
+					 boolean amountValidated = false;
+		            do {
+		                    
+		                    
+		                    try {
+		                    	scanner = new Scanner(System.in);
+		                    	System.out.println("Enter Amount : ");
+		                        amount = scanner.nextDouble();
+		                            amountValidated = serviceImpl.validateAmount(amount,accountNo,"debit");
+		                    } catch (BankException e) {
+		                            
+		                            System.err.println(e.getMessage());
+		                    }
+		                    catch (InputMismatchException e) {
+		                        System.err.println("Please enter numeric value");
+		                }
+		            } while(!amountValidated);
+					String type = "debit";
+					
+					Transaction transaction = new Transaction( accountNo, type, amount, accountNo);
+					
+					try {
+						transactionNo = serviceImpl.withdraw(transaction);
+						System.out.println("Your account is debited with Rs : "+amount+
+								"\n And your transaction id is : "+transactionNo);
+					} catch (BankException e) {
+						System.err.println(e.getMessage());
+					}
+						
+					}
+				
+					break;
+					
+					case 5:{
+					long accountNo = 0,destinationAccountNo =0;
+					boolean accountValidated = false;
+					do {
+						
+						try {
+							scanner = new Scanner(System.in);
+							System.out.println("Enter Account : ");
+							accountNo = scanner.nextLong();
+							String accountName = serviceImpl.getAccountName(accountNo);
+							System.out.println("Account Name : "+accountName);
+							if (!accountName.equals("")) {
+								accountValidated = true;
+							}
+						} catch (NullPointerException e) {
+							
+							System.err.println("This Account doesn't exists");
+						} catch (InputMismatchException e) {
+							System.err.println("Please enter numeric value");
+						}
+					} while (!accountValidated);
+					boolean recieverAccountValidated = false;
+					do {
+						
+						try {
+							System.out.println("Enter reciever account no. :");
+							destinationAccountNo = scanner.nextLong();
+							String accountName = serviceImpl.getAccountName(destinationAccountNo);
+							System.out.println("Account Name : "+accountName);
+							if (!accountName.equals("")) {
+								recieverAccountValidated = true;
+							}
+						} catch (NullPointerException e) {
+							
+							System.err.println("This Account doesn't exists");
+						} catch (InputMismatchException e) {
+							System.err.println("Please enter numeric value");
+						}
+					} while (!recieverAccountValidated);
+					double amount = 0;
+					 boolean amountValidated = false;
+		            do {
+		                    
+		                    
+		                    try {
+		                    	scanner = new Scanner(System.in);
+		                    	System.out.println("Enter Amount : ");
+		                        amount = scanner.nextDouble();
+		                            amountValidated = serviceImpl.validateAmount(amount,accountNo,"debit");
+		                    } catch (BankException e) {
+		                            System.out.println(amountValidated);
+		                            System.err.println(e.getMessage());
+		                    }
+		                    catch (InputMismatchException e) {
+		                    System.err.println("Please enter numeric value");
+		                }
+		            } while(!amountValidated);
+					String type = "debit";
+					
+					
+					Transaction transaction = new Transaction( accountNo, type, amount, destinationAccountNo);
+					try {
+						transactionNo = serviceImpl.fundTransfer(transaction);
+						System.out.println("Your have transferred Rs : "+amount+ " to "+ serviceImpl.getAccountName(destinationAccountNo)+
+								"\n And your transaction id is : "+transactionNo);
+					} catch (BankException e) {
+						System.err.println(e.getMessage());
+					}
+						
+					
+				}
+					break;
+				case 6:
+				{
+					long accountNo = 0;
+					boolean accountValidated = false;
+					do {
+						
+						try {
+							scanner = new Scanner(System.in);
+							System.out.println("Enter Account : ");
+							accountNo = scanner.nextLong();
+							String accountName = serviceImpl.getAccountName(accountNo);
+							System.out.println("Account Name : "+accountName);
+							if (!accountName.equals("")) {
+								accountValidated = true;
+							}
+						} catch (NullPointerException e) {
+							System.err.println("This Account doesn't exists");
+						} catch (InputMismatchException e) {
+							System.err.println("Please enter numeric value");
+						}
+					} while (!accountValidated);
+					List<Transaction> transactions = null;
+					try {
+						transactions = serviceImpl.showAllTransactions(accountNo);
+					} catch (InputMismatchException | BankException e) {
+						System.err.println(e.getMessage());
+					}
+					int count=0;
+					for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext() && count <10;) {
+						Transaction transaction = (Transaction) iterator.next();
+						System.out.println(transaction);
+						count++;
+					}
+				}
+					break;
+					
+				case 7:{
+					long accountNo = 0;
+					boolean accountValidated = false;
+					do {
+						
+						try {
+							scanner = new Scanner(System.in);
+							System.out.println("Enter Account : ");
+							accountNo = scanner.nextLong();
+							String accountName = serviceImpl.getAccountName(accountNo);
+							System.out.println("Account Name : "+accountName);
+							if (!accountName.equals("")) {
+								accountValidated = true;
+								}
+						} catch (NullPointerException e) {
+							System.out.println(accountValidated);
+							System.err.println("This Account doesn't exists");
+						} catch (InputMismatchException e) {
+							System.err.println("Please enter numeric value");
+						}
+					} while (!accountValidated);
+					List<Transaction> transactions = null;
+					try {
+						transactions = serviceImpl.showAllTransactions(accountNo);
+						for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
+							Transaction transaction = (Transaction) iterator.next();
+							System.out.println(transaction);
+						}
+					} catch (InputMismatchException | BankException e) {
+						System.err.println(e.getMessage());
+					}
+					
+				}
+					break;
+				} while (true);
+			
+			break;
+			
+		
+			
+		
+			
+		
 		
 		
 		default:

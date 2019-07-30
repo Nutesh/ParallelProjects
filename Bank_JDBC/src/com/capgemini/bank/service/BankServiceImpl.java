@@ -54,7 +54,7 @@ public class BankServiceImpl implements BankService {
 			return true;
 	}
 	
-	public boolean validatePin(Integer pin) throws BankException {
+	public boolean validatePin(Integer pin) throws BankException,InputMismatchException {
 		String nameRegEx = "[0-9]{4}";
 		if (!Pattern.matches(nameRegEx, pin.toString())) {
 			throw new BankException("please enter a valid pin length must be exact 4 digits only");
@@ -72,13 +72,19 @@ public class BankServiceImpl implements BankService {
 	}
 
 	public boolean validateAmount(double amount, long accountNo,String type) throws BankException, InputMismatchException {
-		boolean amountValidated = false; 
+		boolean amountValidated = false;
+		double balance=dao.showBalance(accountNo);
 		if(type == "debit")
 		 {
 			 if (amount <= 0 || amount > 20000) {
 			
 				throw new BankException("Amount must be greater than 0 and not more than 2000");
 			}
+			 if (amount > balance) {
+					
+					throw new BankException("You have insufficient balance");
+				}
+				 
 			amountValidated = true;
 		 }
 		 else if(type == "credit")
@@ -111,7 +117,7 @@ public class BankServiceImpl implements BankService {
 	public String deposit(Transaction transaction) throws BankException {
 		String transactionNo=dao.insertTransaction(transaction);
 		double destAccountBalance = dao.showBalance(transaction.getDestinationAccountNo());
-		destAccountBalance =+ transaction.getAmount();
+		destAccountBalance = destAccountBalance + transaction.getAmount();
 		int deposited = dao.updateBalance(transaction.getDestinationAccountNo(), destAccountBalance);
 		if(deposited <0) {
 			throw new BankException("There was some error in transaction ..\nPlease try again!!");
@@ -125,9 +131,10 @@ public class BankServiceImpl implements BankService {
 	public String fundTransfer(Transaction transaction) throws BankException {
 		String transactionNo=dao.insertTransaction(transaction);
 		double destAccountBalance = dao.showBalance(transaction.getDestinationAccountNo());
-		destAccountBalance =+ transaction.getAmount();
+		destAccountBalance = destAccountBalance + transaction.getAmount();
 		int amountAdded = dao.updateBalance(transaction.getDestinationAccountNo(), destAccountBalance);
-		double sourceAccountBalance =- transaction.getAmount();
+		double sourceAccountBalance =  dao.showBalance(transaction.getAccountNo());
+		sourceAccountBalance = sourceAccountBalance - transaction.getAmount();
 		int amountDeducted = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
 		if(amountAdded <0 || amountDeducted<0) {
 			throw new BankException("There was some error in transaction ..\nPlease try again!!");
@@ -140,7 +147,7 @@ public class BankServiceImpl implements BankService {
 	public String withdraw(Transaction transaction) throws BankException {
 		String transactionNo=dao.insertTransaction(transaction);
 		double sourceAccountBalance = dao.showBalance(transaction.getAccountNo());
-		sourceAccountBalance =- transaction.getAmount();
+		sourceAccountBalance = sourceAccountBalance + transaction.getAmount();
 		int withdrawn = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
 		if(withdrawn <0) {
 			throw new BankException("There was some error in transaction ..\nPlease try again!!");
