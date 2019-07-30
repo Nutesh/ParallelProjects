@@ -27,7 +27,7 @@ public class MainUI {
 		
 		
 		do {
-		System.out.println("***********************Welcome to XYZ Bank*************************");
+		System.out.println("**********************Welcome to XYZ Bank*************************");
 		System.out.println(
 				"1.Create Account \n2.Check Balance\n3.Deposit\n4.Withdraw\n5.Fund Transfer\n6.Print Last 10 Transactions\n7.Print All Transactions\n8.Exit");
 		int userInput = 0;
