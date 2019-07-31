@@ -15,7 +15,7 @@ public interface BankService {
 
 	public long createAccount(Account account) throws BankException;
 
-
+	public String validateAccount(long accountNo,int pin);
 
 	public String deposit(Transaction transaction) throws BankException;
 

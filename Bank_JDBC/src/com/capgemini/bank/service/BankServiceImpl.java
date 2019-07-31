@@ -147,7 +147,7 @@ public class BankServiceImpl implements BankService {
 	public String withdraw(Transaction transaction) throws BankException {
 		String transactionNo=dao.insertTransaction(transaction);
 		double sourceAccountBalance = dao.showBalance(transaction.getAccountNo());
-		sourceAccountBalance = sourceAccountBalance + transaction.getAmount();
+		sourceAccountBalance = sourceAccountBalance - transaction.getAmount();
 		int withdrawn = dao.updateBalance(transaction.getAccountNo(), sourceAccountBalance);
 		if(withdrawn <0) {
 			throw new BankException("There was some error in transaction ..\nPlease try again!!");
@@ -160,6 +160,11 @@ public class BankServiceImpl implements BankService {
 	public double showBalance(long accountNo) throws BankException, InputMismatchException {
 		
 		return dao.showBalance(accountNo);
+	}
+
+	@Override
+	public String validateAccount(long accountNo, int pin) {
+		return dao.validateAccount(accountNo, pin);
 	}
 
 	
