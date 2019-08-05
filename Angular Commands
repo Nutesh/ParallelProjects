@@ -1,0 +1,33 @@
+npm install bootstrap@latest jquery --save
+open angular.json file: update line no 26
+in scripts add bootstrap-min.js
+
+"styles": [
+              "src/styles.css",
+              "arraydemo/node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [
+		"arraydemo/node_modules/jquery/dist/jquery.js",
+              "arraydemo/node_modules/bootstrap/dist/js/bootstrap.min.js"  
+            ],
+
+ npm install -g json-server
+command to install json
+--------------------------
+to run json file , default port is 3000
+json-server --watch db.json
+-------------------------
+to run json in different port
+json-server --watch db.json --port <port number>
+
+
+
+----------------------------------------------------------------
+Creating our own directive
+----------------------------------------------------------------
+ng g directive directiveName
+
+----------------------------------
+Creating own pipe
+--------------------------
+ng g pipe pipeName
