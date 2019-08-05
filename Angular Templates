@@ -1,0 +1,165 @@
+-------------------------------
+Updating Data in JSON file using button 
+---------------------------
+<a [routerLink]="['update',customer.id]" class="btn btn-primary">
+use above anchor tag which will pass id to the json file 
+[routerLink] = attribute	
+update = path name
+customer = object of type Customer class defined in html class
+
+---------------------------------------------
+Displaying Data in next page using button
+---------------------------------------------
+inside method where form is being called say update()
+** define update() method in corresponding .ts file as follows
+----
+update(){
+    console.log(this.customerData.name);
+    this.customerService.updateCustomer(this.customerData).subscribe((data)=>{this.router.navigate(['listcustomer']);})
+  }
+----
+this.customerService is a object of CustomerService component defined in constructor of update component's ts file
+with private access modifier which will call service class 
+----
+by using subscribe we will get stream of data which will then call router object which is defined in constructor of update
+customer's ts file with private access modifier
+----
+router object will call navigate method with parameter as path name where page needs to be switched
+----
+listcustomer = path where page needs to be switched
+----
+import Customer model class,CustomerService class from local files directory
+ and Router from '@angular/router'
+---------------
+i.e.
+---------------
+import { Customer } from 'src/app/model/customer';
+import { CustomerService } from 'src/app/service/customer.service';
+import { Router, ActivatedRoute } from '@angular/router';
+
+----------------------------------------------------------------
+Initializing data in page when page is loaded
+----------------------------------------------------------------
+for this a value must be passed 
+----
+here that value is customer id and generally pass id which is unique for every value in json file hence it will be easy for fetching all values 
+----
+ngOnInit() {
+    this.route.params.subscribe((params)=>{this.customerService.getCustomer(params['id']).subscribe((result)=>{this.customerData=result;})})
+  }
+
+route.params.subscribe will fetch stream of data of specific data of passed id
+
+
+
+
+-----------------------------------------------
+Inside service Class
+-----------------------------------------------
+make string object url which stores stores json server url 
+i.e.  url:string="http://localhost:3000/customers";
+customers = array of customer objects
+---
+create a object of HttpClient inside constructor as with private access modifier for this import HttpClient 
+*** import this file from '@angular/common/http' 
+i.e. import { HttpClient } from '@angular/common/http';//Always take this one not selenium one 
+----
+------------------------
+adding basic methods 
+------------------------
+addCustomer(customer:Customer){
+    return this.http.post(this.url,customer);
+  }
+
+  getAllCustomers(){
+    return this.http.get<Customer[]>(this.url);
+  }
+
+  getCustomer(id:number){
+    return this.http.get<Customer>(this.url + "/" + id);
+  }
+
+  deleteCustomer(customer:Customer){
+    return this.http.delete<Customer[]>(this.url + "/" + customer.id);
+  }
+
+  updateCustomer(customer:Customer){
+    return this.http.put(this.url + "/" + customer.id,customer);
+  }
+--------
+search
+-------
+define a variable of Customer[] type where searched data will be stored
+----
+getting searched data
+i.e.	getSearchedData(){
+    return this.filtereddata;
+  }
+setting searched data for required format
+i.e 	setSearchedData(searchedData:Customer[]){
+    console.log(searchedData);
+    this.filtereddata=searchedData;
+  }
+----
+every component will call service class method inside .ts file of component
+----
+----------------
+deleting customer
+----------------
+i.e.	deleteCustomer(customer:Customer){
+    this.customerService.deleteCustomer(customer).subscribe((data)=>{this.customers=this.customers.filter(c=>c!==customer)});
+  }
+deleting and showing same data inside table
+
+
+---------------------------------------------
+Form Template
+----------------------------------------------
+#################
+Field for numeric format
+################
+<div class="form-group has-error has-feedback" [class.has-error]="custId.invalid && custId.touched">
+                <label name="id" class="control-label">CustomerId</label>
+                <input type="number" id="id" name="id" class="form-control" [(ngModel)]="customerData.id" #custId="ngModel" required readonly>
+                <span *ngIf="custId.invalid && custId.touched">CustomerId is required</span>
+            </div>
+#################
+Field for text format
+#################
+<div class="form-group has-error has-feedback" [class.has-error]="custName.invalid && custName.touched">
+                <label name="name" class="control-label">Customer Name</label>
+                <input type="text" name="name" id="name" class="form-control" [(ngModel)]="customerData.name" #custName="ngModel" required pattern="[a-zA-Z]{5,}">
+                <span *ngIf="custName.errors?.required && custName.touched" class="help-block">Name must be entered</span>
+                <span *ngIf="custName.errors?.pattern && custName.touched" class="help-block">Minimum 5 characters required</span>
+            </div>
+##################
+Field for email
+##################
+<div class="form-group has-error has-feedback" [class.has-error]="custEmail.invalid && custEmail.touched">
+                <label name="email" class="control-label">Customer Email</label>
+                <input type="email" id="email" name="email" class="form-control" [(ngModel)]="customerData.email" #custEmail="ngModel" required email>
+                <span *ngIf="custEmail.errors?.required && custEmail.touched">Customer Email is required</span>
+                <span *ngIf="custEmail.errors?.email && custEmail.touched" class="help-block">Email invalid</span>
+            </div>
+###################
+Field for phone number
+###################
+<div class="form-group has-error has-feedback" [class.has-error]="phone.invalid && phone.touched">
+                <label name="phone" class="control-label">Phone</label>
+                <input type="number" name="phone" id="phone" class="form-control" [(ngModel)]="customerData.phone" #custPhone="ngModel" required pattern="^[7-9]{1}[0-9]{9}$">
+                <span *ngIf="custPhone.errors?.required && custPhone.touched">Customerphone  is required</span>
+                <span *ngIf="custPhone.errors?.pattern && custPhone.touched" class="help-block">Phone Number invalid</span>
+</div>
+###########################################
+For enabling button only when form is valid
+###########################################
+<button class="btn btn-primary" type="submit" [disabled]="custForm.invalid">Update</button>
+#############################################
+For showing form data in json format
+############################################
+ {{custForm.value| json}}
+
+########################################
+
+<form #custForm="ngForm" (ngSubmit)="add()">
+</form>
