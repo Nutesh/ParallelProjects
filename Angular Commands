@@ -2,7 +2,7 @@
 1. Create a new project
 -----------------------------------------------------------------------------------
 
-ng new customercrud 
+ng new customercrud --skip-tests
 delete unnecessary tags from app.component.html
 
 ---------------------------------------------------------------------------------- 
@@ -57,8 +57,8 @@ ng g class bean/customer
 6. Create components
 ------------------------------------------------------------
 
-ng g c components/about --skip-tests --flat
-
+ng g c components/about --skip-tests --flat  {--flat removes folder directly creates files inside component folder}
+*************avoid using --flat**********************
 use above code for not including test files
 else use 
 
@@ -180,7 +180,9 @@ create a object of HttpClient inside constructor as with private access modifier
 i.e. import { HttpClient } from '@angular/common/http';//Always take this one not selenium one 
 ----
 ------------------------
-adding basic methods 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+adding basic methods with json server
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ------------------------
 addCustomer(customer:Customer){
     return this.http.post(this.url,customer);
@@ -201,6 +203,10 @@ addCustomer(customer:Customer){
   updateCustomer(customer:Customer){
     return this.http.put(this.url + "/" + customer.id,customer);
   }
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+adding basic methods without json server
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
 --------
 search
 -------
@@ -318,4 +324,28 @@ Iterating object array inside json file
             
             <td><a [routerLink]="['update',customer.id]" class="btn btn-primary">Update</a></td>
         </tr>
-
+##################################################
+Sorting Name 
+#################################################
+filterByName(customerArray:Customer[]) {
+    
+    console.log(this.sortByName);
+    return customerArray.sort((a, b) => a['name'] > b['name'] ? 1 : a['name'] === b['name'] ? 0 : -1);
+    
+  }
+#################################################
+Sort Id
+##################################################
+filterByEmail(customerArray:Customer[]) {
+    return customerArray.sort((a, b) => a['email'] > b['email'] ? 1 : a['email'] === b['email'] ? 0 : -1);
+    
+  }
+#################################################
+Search
+#################################################
+search(value: string) {
+    this.searchedData = this.customers.filter(
+      Customer => Customer.name.toLowerCase().indexOf(value.toLowerCase()) !== -1);
+    this.service.setSearchedData(this.searchedData);
+  }
+################################################
