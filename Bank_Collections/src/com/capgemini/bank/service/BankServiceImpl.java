@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
-import com.capgemini.bank.bean.Account;
-import com.capgemini.bank.bean.Transaction;
+import com.bank.bean.Account;
+import com.bank.bean.Transaction;
 import com.capgemini.bank.dao.BankDAO;
 import com.capgemini.bank.dao.BankDAOImpl;
 import com.capgemini.bank.exception.BankException;

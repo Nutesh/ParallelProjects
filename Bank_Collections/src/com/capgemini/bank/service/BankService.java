@@ -5,8 +5,8 @@ package com.capgemini.bank.service;
 import java.util.InputMismatchException;
 import java.util.List;
 
-import com.capgemini.bank.bean.Account;
-import com.capgemini.bank.bean.Transaction;
+import com.bank.bean.Account;
+import com.bank.bean.Transaction;
 import com.capgemini.bank.exception.BankException;
 
 public interface BankService {

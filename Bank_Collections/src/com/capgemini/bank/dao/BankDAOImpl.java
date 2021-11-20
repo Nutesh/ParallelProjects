@@ -1,7 +1,7 @@
 package com.capgemini.bank.dao;
 
-import com.capgemini.bank.bean.Account;
-import com.capgemini.bank.bean.Transaction;
+import com.bank.bean.Account;
+import com.bank.bean.Transaction;
 
 public class BankDAOImpl implements BankDAO {
 	

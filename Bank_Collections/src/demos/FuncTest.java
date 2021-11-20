@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import com.capgemini.bank.bean.Account;
+import com.bank.bean.Account;
 import com.capgemini.bank.dao.BankDAO;
 import com.capgemini.bank.exception.BankException;
 import com.capgemini.bank.utility.BankDB;

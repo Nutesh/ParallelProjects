@@ -3,8 +3,8 @@ package com.capgemini.bank.utility;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.capgemini.bank.bean.Account;
-import com.capgemini.bank.bean.Transaction;
+import com.bank.bean.Account;
+import com.bank.bean.Transaction;
 import com.capgemini.bank.dao.BankDAO;
 
 public class BankDB {

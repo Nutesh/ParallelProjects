@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import com.capgemini.bank.bean.Account;
-import com.capgemini.bank.bean.Transaction;
+import com.bank.bean.Account;
+import com.bank.bean.Transaction;
 import com.capgemini.bank.exception.BankException;
 import com.capgemini.bank.service.BankServiceImpl;
 
